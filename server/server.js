@@ -192,8 +192,8 @@ initDb(function (err, db) {
 
 const insertDocuments = (db) => {
     console.log(db)
-    let collection = db.collection('documents');
-    collection.drop();
+    let collection1 = db.collection1('documents');
+    collection1.drop();
     let collection = db.collection('channels');
     const csvFilePath = 'file.csv';
     csv()
