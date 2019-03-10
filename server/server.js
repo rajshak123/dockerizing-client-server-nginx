@@ -18,6 +18,7 @@ let {
 const {
     SHA256
 } = require('crypto-js')
+const initDb = require('./mongoConnect').initDb;
 
 const cors = require('cors');
 const csv = require('csvtojson');
@@ -192,7 +193,7 @@ initDb(function (err, db) {
   const insertDocuments = (db) => {
     console.log(db)
     let collection = db.collection('documents');
-    
+      collection.remove();
   
     const csvFilePath = 'file.csv';
     csv()
