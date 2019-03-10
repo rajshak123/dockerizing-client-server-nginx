@@ -33,6 +33,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+
+
 // let authenticate = (req, res, next) => {
 
 //     let jwttoken = req.headers['authorization'];
@@ -173,7 +175,7 @@ initDb(function (err, db) {
     if (err) {
         throw err
     } else {
-        insertDocuments(db)
+        //  insertDocuments(db)
 
         // db.collection('documents').createIndex({ name: "text", artists: "text" }).then(re => { 
         //   console.log(re)
@@ -221,3 +223,26 @@ const insertDocuments = (db) => {
 
     // collection.createIndex( { name: "text", artists: "text" } )
 }
+
+app.get('/', (req, res) => {
+  
+    let connection = req.app.locals.connection
+    let collection = connection.collection('documents');
+  
+    collection.find({})
+      .sort({
+        "rank": 1
+      }).limit(50).toArray(function (err, docs) {
+        if (docs) {
+          res.status(200).json({
+            msg: msg.SUCCESS,
+            data: docs
+          })
+        }
+        if (err) {
+          res.status(200).json({
+            msg: msg.FAILURE
+          })
+        }
+      })
+  });
