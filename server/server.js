@@ -171,59 +171,54 @@ const port = process.env.PORT || 3090;
 
 initDb(function (err, db) {
     if (err) {
-      throw err
+        throw err
     } else {
-      insertDocuments(db)
-      
-      // db.collection('documents').createIndex({ name: "text", artists: "text" }).then(re => { 
-      //   console.log(re)
-      // }).catch(e => { 
-      //   console.log(e)
-      // })
-      app.locals.connection = db
-      app.listen(5000, function (err) {
-        if (err) {
-          throw err;
-        }
-        console.log("API Up and running on port 5000");
-      })
+        insertDocuments(db)
+
+        // db.collection('documents').createIndex({ name: "text", artists: "text" }).then(re => { 
+        //   console.log(re)
+        // }).catch(e => { 
+        //   console.log(e)
+        // })
+        app.locals.connection = db
+        app.listen(5000, function (err) {
+            if (err) {
+                throw err;
+            }
+            console.log("API Up and running on port 5000");
+        })
     }
-  })
-  
-  const insertDocuments = (db) => {
+})
+
+const insertDocuments = (db) => {
     console.log(db)
     let collection = db.collection('documents');
-      collection.remove();
-  
+    collection.remove();
+
     const csvFilePath = 'file.csv';
     csv()
-      .fromFile(csvFilePath)
+        .fromFile(csvFilePath)
         .then((jsonObj) => {
-          console.log(jsonObj)
-        collection.createIndex( { name: "text", artist: "text" } )
+            console.log(jsonObj)
+            collection.createIndex({
+                name: "text",
+                artist: "text"
+            })
             jsonObj.map(e => {
-            console.log(e)
-        //   e.danceability = parseFloat(e.danceability)
-        //   e.energy = parseFloat(e.energy)
-        //   e.loudness = parseFloat(e.loudness)
-        //   e.key = parseInt(e.key)
-        //   e.mode = parseInt(e.mode)
-        //   e.speechiness = parseFloat(e.speechiness)
-        //   e.acousticness = parseFloat(e.acousticness)
-        //   e.liveness = parseFloat(e.liveness)
-        //   e.valence = parseFloat(e.valence)
-        //   e.tempo = parseFloat(e.tempo)
-        //   e.duration_ms = parseInt(e.duration_ms)
-        //   e.time_signature = parseInt(e.time_signature)
-        //   e.rank = parseInt(e.rank)
-        //   collection.insertOne({
-        //     ...e
-        //   }).then(res => { })
-        //     .catch((r) => {
-        //     console.log(r)
-        //   })
+                e.rank = parseInt(e['Rank'])
+                e.grade = e['Grade']
+                e.channel = e['Channel name']
+                e.uploadViews = parseInt(e['Video Uploads'])
+                e.subscribers = parseInt(e['Subscribers'])
+                e.views = parseInt(e['Video views'])
+                collection.insertOne({
+                        ...e
+                    }).then(res => {})
+                    .catch((r) => {
+                        console.log(r)
+                    })
+            })
         })
-      })
-    
-      // collection.createIndex( { name: "text", artists: "text" } )
-  }
+
+    // collection.createIndex( { name: "text", artists: "text" } )
+}
