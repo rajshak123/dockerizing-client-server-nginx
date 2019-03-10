@@ -193,13 +193,12 @@ initDb(function (err, db) {
 const insertDocuments = (db) => {
     console.log(db)
     let collection = db.collection('documents');
-    collection.remove();
+    collection.deleteMany();
 
     const csvFilePath = 'file.csv';
     csv()
         .fromFile(csvFilePath)
         .then((jsonObj) => {
-            console.log(jsonObj)
             collection.createIndex({
                 name: "text",
                 artist: "text"
